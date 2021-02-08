@@ -106,17 +106,19 @@ public class WeatherForecastService {
 		for(WeatherAttributes attributes : weatherApiResponse.getList()) {
 			String date = attributes.getDt_txt().split("\\s+")[0];
 			Date recordDate = sdformat.parse(date);
-			long diffInMillies = Math.abs(recordDate.getTime() - currentDate.getTime());
-		    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-			if(diff>0 && diff<=3) {
-				if(dateMap.containsKey(date)) {
-					dateMap.get(date).add(attributes);
-				}else {
-					List<WeatherAttributes> attrib = new ArrayList<>();
-					attrib.add(attributes);
-					dateMap.put(date, attrib);
+			long diffInMillies = recordDate.getTime() - currentDate.getTime();
+			if(diffInMillies > 0) {
+			    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+				if(diff>0 && diff<=3) {
+					if(dateMap.containsKey(date)) {
+						dateMap.get(date).add(attributes);
+					}else {
+						List<WeatherAttributes> attrib = new ArrayList<>();
+						attrib.add(attributes);
+						dateMap.put(date, attrib);
+					}
 				}
-			}		
+			}	
 		}
 	}
 }
